@@ -26,11 +26,16 @@ class AdminController extends Controller
             'email' => $check['email'],
             'password' => $check['password'],
         ];
-        if(Auth::guard('admin')){
-            return redirect()->route('admin.dashboard');
+        if(Auth::guard('admin')->attempt($data)){
+            return redirect()->route('admin.dashboard')->with('success', 'Login Succesfully');
         }else{
-            return back()->with('error', 'Invalid Credentials');
+            return redirect()->route('admin.login')->with('error', 'Invalid Credentials');
         }
+    }
+
+    public function AdminLogout(){
+        Auth::guard('admin')->logout();
+        return redirect()->route('admin.login')->with('success', 'logged out successfully');
     }
 
 }

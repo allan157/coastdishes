@@ -18,6 +18,16 @@
 
     @endif
 
+    @if (Session::has('error'))
+        <li>{{ Session::get('error')}}</li>
+
+    @endif
+
+    @if (Session::has('success'))
+        <li>{{ Session::get('success')}}</li>
+
+    @endif
+
     <form action="{{ route ('admin.login_submit')}}" method="POST">
         @csrf
 
