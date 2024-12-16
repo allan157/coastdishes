@@ -70,4 +70,11 @@ class AdminController extends Controller
         return redirect()->back()->with('success','Password reset link has been sent to your email address');
     }
 
+    public function AdminProfile(){
+        $id = Auth::guard('admin')->id();
+        $profileData = Admin::find($id);
+        return view('admin.admin_profile',compact('profileData'));
+    }
+
+
 }
