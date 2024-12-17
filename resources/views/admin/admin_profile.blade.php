@@ -1,7 +1,7 @@
 @extends('admin.admin_dashboard')
 
 @section('admin')
- 
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
 <div class="page-content">
@@ -61,7 +61,9 @@
 
 
             <div class="card-body p-4">
-                <form action="">
+                <form action="{{ route('admin.profile.store')}}" method="post" enctype="multipart/form-data">
+                    @csrf
+                    
                     <div class="row">
                         <div class="col-lg-6">
                             <div>
