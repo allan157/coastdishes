@@ -80,9 +80,9 @@ class AdminController extends Controller
         $data = Admin::find($id);
 
         $data->name = $request->name;
-        $data->name = $request->email;
-        $data->name = $request->phone;
-        $data->name = $request->address;
+        $data->email = $request->email;
+        $data->phone = $request->phone;
+        $data->address = $request->address;
         $oldPhotoPath = $data->photo;
 
         if ($request->hasFile('photo')) {
@@ -96,7 +96,13 @@ class AdminController extends Controller
             }
         }
         $data->save();
-        return redirect()->back();
+
+        $notification = array(
+            'message' => 'profile updated succesfully',
+            'alert-type' =>'success'
+        );
+
+        return redirect()->back()->with($notification);
 
 
     }
@@ -108,6 +114,35 @@ class AdminController extends Controller
         }
     }
 
+    public function AdminChangePassword(){
+        $id = Auth::guard('admin')->id();
+        $profileData = Admin::find($id);
+        return view('admin.admin_change_password',compact('profileData'));
+    }
 
-    
-}
+    public function AdminPasswordUpdate(Request $request){
+        $admin = Auth::guard('admin')->user();
+        $request->validate([
+            'old_password' => 'required',
+            'new_password' => 'required|confirmed'
+        ]);
+
+        if (!Hash::check($request->old_password,$admin->password)) {
+            $notification = array(
+                'message' => 'Old Password Does not Match!',
+                'alert-type' => 'error'
+            );
+            return back()->with($notification);
+        }
+        /// Update the new password
+        Admin::whereId($admin->id)->update([
+            'password' => Hash::make($request->new_password)
+        ]);
+                $notification = array(
+                'message' => 'Password Change Successfully',
+                'alert-type' => 'success'
+            );
+            return back()->with($notification);
+     }
+      // End Method
+    }
